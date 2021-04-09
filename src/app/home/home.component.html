@@ -1,0 +1,104 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">ประกาศทุนวิจัย</h4>
+        <h6 class="text-danger">{{message1}}</h6>
+        <div class="table-responsive">
+          <table class="table">
+            <tr>
+              <td width="10%">ปีงบประมาณ</td>
+              <td width="15%">แหล่งทุน</td>
+              <td width="20%">หน่วยงาน</td>
+              <td width="20%">ช่วงเวลาเปิดรับ</td>
+              <td width="10%">ส่งแล้ว</td>
+              <td width="10%">อนุมัติ</td>
+            </tr>
+            <tr *ngFor="let d of researchAnnounces">
+              <td>{{ d.year }}</td>
+              <td>{{ d.type.name }}</td>
+              <td>{{ d.dep.name }}</td>
+              <td>
+                <span class="fa fa-fw fa-calendar-{{d.open ? 'check-o text-success' : 'minus-o text-danger'}}"></span>
+                {{ (d.start | dateThai) + ' - ' + (d.end | dateThai) }}
+              </td>
+              <td>{{ d.sent || 0 }}</td>
+              <td>{{ d.approved || 0 }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p>&nbsp;</p>
+
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">ประกาศโครงการบริการวิชาการ</h4>
+        <h6 class="text-danger">{{message2}}</h6>
+        <div class="table-responsive">
+          <table class="table">
+            <tr>
+              <td width="10%">ปีงบประมาณ</td>
+              <td width="20%">หน่วยงาน</td>
+              <td width="20%">ช่วงเวลาเปิดรับ</td>
+              <td width="10%">ส่งแล้ว</td>
+              <td width="10%">อนุมัติ</td>
+            </tr>
+            <tr *ngFor="let d of academicAnnounces">
+              <td>{{ d.year }}</td>
+              <td>{{ d.dep.name }}</td>
+              <td>
+                <span class="fa fa-fw fa-calendar-{{d.open ? 'check-o text-success' : 'minus-o text-danger'}}"></span>
+                {{ (d.start | dateThai) + ' - ' + (d.end | dateThai) }}
+              </td>
+              <td>{{ d.sent || 0 }}</td>
+              <td>{{ d.approved || 0 }}</td>
+            </tr>
+          </table>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p>&nbsp;</p>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">ติดต่อ</h4>
+        <h5><a href="http://srdi.yru.ac.th/" target="_blank">สถาบันวิจัยและพัฒนาชายแดนภาคใต้</a></h5>
+        <p><a href="http://srdi.yru.ac.th/research/" target="_blank">งานส่งเสริมการวิจัยและข้อมูลท้องถิ่น</a></p>
+        <p><i class="fa fa-phone"></i> 073-299635, 073-299699 ต่อ 31002</p>
+        <p><a href="http://srdi.yru.ac.th/hrd/" target="_blank">งานพัฒนาทรัพยากรมนุษย์ (บริการวิชาการ)</a></p>
+        <p><i class="fa fa-phone"></i> 073-299699 ต่อ 31000</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title"><i class="fa fa-calendar"></i> ปฏิทินงานวิจัยและงานบริการวิชาการ</h4>
+        <div class="responsive-iframe-container">
+          <iframe src="https://calendar.google.com/calendar/embed?showTitle=0&amp;height=400&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=yru.ac.th_pl2r5mgjhhvhskhu0s37hj9smc%40group.calendar.google.com&amp;color=%231B887A&amp;ctz=Asia%2FBangkok" style="border-width:0" width="700" height="400" frameborder="0" scrolling="no"></iframe>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+

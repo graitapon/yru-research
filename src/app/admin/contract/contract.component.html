@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-md-4">
+
+    <mat-form-field style="width: 300px;">
+      <mat-select placeholder="หน่วยงาน" [(value)]="dep_id" (selectionChange)="gets()">
+        <mat-option *ngFor="let d of deps" [value]="d.id">{{d.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+  <div class="col-auto">
+    <mat-form-field>
+      <mat-select placeholder="ปีงบประมาณ" [(value)]="year" (selectionChange)="gets()">
+        <mat-option *ngFor="let d of years" [value]="d">{{d}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-auto">
+    <mat-form-field>
+      <mat-select placeholder="แหล่งทุน" [(value)]="type_id" (selectionChange)="gets()">
+        <mat-option value="">ทั้งหมด</mat-option>
+        <mat-option *ngFor="let d of types" [value]="d.id">{{d.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="col-auto">
+    <div class="badge badge-pill" [ngClass]="items.length > 0 ? 'badge-success' : 'badge-danger'">{{ items.length }}</div>
+  </div>
+
+</div>
+
+<table class="table table-bordered">
+  <tr>
+    <th width="10%">รหัสโครงการ</th>
+    <th>ชื่อโครงการ</th>
+    <th width="13%">งบประมาณ</th>
+    <th width="15%">สถานะ</th>
+  </tr>
+  <tr *ngFor="let d of items">
+    <td align="center">{{d.code || '-'}}</td>
+    <td>
+      <a [routerLink]="['/admin/contract', d.contract_id, links]" *ngIf="d.contract_id">{{d.name}}</a>
+      <div *ngIf="!d.contract_id">{{d.name}}</div>
+    </td>
+    <td align="right">{{d.budget | number:'1.2-2'}}</td>
+    <td align="center">
+      <i class="fa fa-fw fa-{{ d.status.icon }}"></i> {{ d.status.name }}
+    </td>
+  </tr>
+</table>

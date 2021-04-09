@@ -1,0 +1,52 @@
+
+.nav>li>a {
+  color: darkcyan;
+  font-size: larger;
+}
+.nav>li>a:hover, .dropdown-menu>li>a:hover {
+  background-color: darkgreen;
+  color: white;
+}
+
+.dropdown-menu>li>a {
+  color: darkcyan;
+}
+
+
+.dropdown-toggle:hover {
+  background-color: darkgreen !important;
+}
+
+.fsm-menu-button {
+  background-color: darkcyan;
+}
+
+.fsm-page-title {
+  color: darkcyan;
+}
+
+
+.nav-selected {
+  border-right: 2px solid darkgreen;
+  background-color: aliceblue;
+}
+
+.root-selected>a {
+  background-color: #f0fff0 !important;
+}
+
+
+.title_1 {
+  color: darkgreen;
+  background-color: #eee;
+  padding: 10px;
+}
+
+.pre1 {
+  white-space: pre-line;
+}
+
+
+.violet {
+  color: darkviolet;
+}

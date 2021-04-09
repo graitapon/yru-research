@@ -1,0 +1,93 @@
+<div *ngIf="!adding; else add_item">
+
+<div class="row">
+  <div class="col-md-4">
+
+    <mat-form-field style="width: 300px;">
+      <mat-select placeholder="หน่วยงาน" [(value)]="dep_id" (selectionChange)="gets()">
+        <mat-option *ngFor="let d of deps" [value]="d.id">{{d.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+  <div class="col-md-1">
+    <button mat-mini-fab color="accent" (click)="add()" *ngIf="canEdit">
+      <i class="fa fa-plus"></i>
+    </button>
+  </div>
+</div>
+<table class="table table-bordered">
+  <tr align="center">
+    <td width="10%">ปีงบประมาณ</td>
+    <td>แหล่งทุน</td>
+    <td>งบประมาณ</td>
+    <td width="20%">ช่วงเวลาเปิดรับ</td>
+    <td>เปิดใช้งาน</td>
+    <td>จำนวนโครงการ</td>
+    <td>อนุมัติ</td>
+  </tr>
+  <tr *ngFor="let d of funds" align="center">
+    <td>{{d.year}}</td>
+    <td>
+      <a [routerLink]="['/admin/fund', d.id]">{{d.type.name}}</a>
+    </td>
+    <td>{{d.budget | number:'1.2-2'}}</td>
+    <td>{{d.start | dateThai}} - {{d.end | dateThai}}</td>
+    <td><i class="fa fa-check" *ngIf="d.enabled_at"></i></td>
+    <td>{{d.sent}}</td>
+    <td>{{d.approved}}</td>
+  </tr>
+</table>
+
+
+
+</div>
+
+
+<ng-template #add_item>
+
+  <div class="row">
+
+    <div class="col-md-1">
+      <button mat-mini-fab color="" (click)="back()">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+
+    </div>
+
+    <div class="col-md-8">
+      <h4>ประกาศทุนใหม่</h4>
+    </div>
+
+  </div>
+  <p>&nbsp;</p>
+
+  <div class="row">
+    <div class="col-md-2">
+
+      <mat-form-field>
+        <mat-select placeholder="ปีงบประมาณ" [(value)]="year">
+          <mat-option *ngFor="let d of years" [value]="d">{{d}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+    <div class="col-md-3">
+
+      <mat-form-field>
+        <mat-select placeholder="แหล่งทุน" [(value)]="fund_type_id">
+          <mat-option *ngFor="let d of fund_types" [value]="d.id">{{d.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+
+    <div class="col">
+      <button mat-raised-button color="primary" (click)="doAdd()" [disabled]="!canAdd">OK</button>
+    </div>
+
+  </div>
+
+
+
+</ng-template>

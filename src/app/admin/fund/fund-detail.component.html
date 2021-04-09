@@ -1,0 +1,101 @@
+<div class="row mb-2">
+  <div class="col-1">
+    <button mat-mini-fab color="" (click)="back()">
+      <i class="fa fa-chevron-left"></i>
+    </button>
+  </div>
+  <div class="col-10"  *ngIf="item">
+    <h4>{{item.year}} {{item.type.name}}</h4>
+  </div>
+</div>
+
+<mat-tab-group class="demo-tab-group">
+  <mat-tab label="รายละเอียด">
+    <div class="demo-tab-content">
+      <table class="table table-bordered"  *ngIf="item">
+        <tr>
+          <td width="20%">ปีงบประมาณ</td>
+          <td>{{item.year}}</td>
+        </tr>
+        <tr>
+          <td>แหล่งทุน</td>
+          <td>{{item.type.name}}</td>
+        </tr>
+        <tr>
+          <td>งบประมาณ</td>
+          <td>
+            <xedit type="number" [data]="item.budget" (save)="save($event, 'budget')"></xedit>
+          </td>
+        </tr>
+        <tr>
+          <td>ช่วงเวลา</td>
+          <td>
+            <xedit type="daterange" [data]="date_range" (save)="save($event, 'date_range')"></xedit>
+
+          </td>
+        </tr>
+        <tr>
+          <td>เปิดใช้งาน</td>
+          <td>
+            <mat-checkbox [checked]="item.enabled_at" (change)="toggleCheck(item)"></mat-checkbox>
+            <span class="ml-3">{{item.enabled_at | dateThai:'time'}}</span>
+          </td>
+        </tr>
+        <tr>
+          <td>ไฟล์ที่เกี่ยวข้อง</td>
+          <td>
+            <ul>
+              <li *ngFor="let d of files">
+                <a href="{{d.url}}" target="_blank">{{d.name}}</a>
+                <span class="" *ngIf="canEdit"><i class="fa fa-times text-danger pointer" (click)="deleteFile(d.id)"></i></span>
+              </li>
+            </ul>
+
+            <div *ngIf="canEdit">
+              <label class="btn badge-primary">
+                <i class="fa fa-cloud-upload"></i> Upload
+                <input type="file" style="display: none;" ng2FileSelect [uploader]="fileUpload.uploader"
+                       (change)="upload()" accept=".pdf,.doc,.docx">
+              </label>
+              <span *ngIf="fileUpload.uploader.queue.length != fileUpload.uploaded">
+             กำลังอัปโหลด.. ({{fileUpload.uploaded}} / {{fileUpload.uploader.queue.length}})
+           </span>
+            </div>
+          </td>
+        </tr>
+
+      </table>
+
+    </div>
+  </mat-tab>
+  <mat-tab label="หัวข้อรายงานผลดำเนินงาน">
+    <div class="demo-tab-content">
+
+      <table class="table table-bordered">
+        <tr align="center">
+          <td width="5%">ลำดับ</td>
+          <td width="30%">หัวข้อรายงาน <i class="fa fa-plus-circle pointer text-primary" (click)="addSubmisSet()"></i></td>
+          <td>คำอธิบาย</td>
+          <td width="25%">ช่วงเวลา</td>
+        </tr>
+        <tr *ngFor="let d of submisSets; let i = index">
+          <td>{{i + 1}}</td>
+          <td>
+            <xedit type="text" [data]="d.name" (save)="submisSetSave($event, 'name', d.id)"></xedit>
+            <div class="pull-right"><i class="fa fa-trash-o text-danger pointer" (click)="deleteSubmisSet(d)"></i></div>
+          </td>
+          <td>
+            <xedit [data]="d.note" class="pre1"
+                           (save)="submisSetSave($event, 'note', d.id)"></xedit>
+          </td>
+          <td>
+            <xedit type="daterange" [data]="d.date_range" (save)="save({id: d.id, date_range: $event}, 'submis_set_date_range')"></xedit>
+
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  </mat-tab>
+</mat-tab-group>
+

@@ -1,0 +1,109 @@
+
+<h5 class="title_1">เงินสนับสนุนงานวิจัยหรืองานสร้างสรรค์</h5>
+<div class="detail_1">
+  <mat-form-field>
+    <mat-select placeholder="ปีงบประมาณ" [(value)]="year" (selectionChange)="getResearchFunds()">
+      <mat-option *ngFor="let d of years" [value]="d">{{d}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <table class="table table-bordered">
+    <tr align="center">
+      <td width="20%" class="middle">คณะ / สถาบัน</td>
+      <td *ngFor="let d of deps5" width="13%" class="middle">{{ d.name }}</td>
+      <td class="middle">รวม</td>
+    </tr>
+    <tr align="right" *ngFor="let k of kpis">
+      <td align="left">{{k.name}}</td>
+      <td *ngFor="let d of deps5">
+        {{ (fund_kpis[k.id] ? (fund_kpis[k.id][d.id] || 0) : 0) | number:'1.2-2' }}
+      </td>
+      <td>{{ (fund_kpis[k.id] ? (fund_kpis[k.id].sum || 0) : 0) | number:'1.2-2' }}</td>
+    </tr>
+  </table>
+</div>
+<p>&nbsp;</p>
+
+<h5 class="title_1">* รายงาน SAR {{sar_year}}</h5>
+<div class="detail_1">
+  <table class="table table-bordered">
+    <tr align="center">
+      <td rowspan="2" width="40%" class="middle">คณะ / หน่วยงาน</td>
+      <td [attr.colspan]="(types.length + 1)">แหล่งทุน</td>
+    </tr>
+    <tr align="center">
+      <td width="15%" *ngFor="let t of types">{{ t.name }}</td>
+      <td width="15%">รวม</td>
+    </tr>
+    <tr align="right" *ngFor="let d of deps">
+      <td align="left">{{ d.name }}</td>
+      <td *ngFor="let t of types">
+        {{ (sars[d.id] ? (sars[d.id][t.id] || 0) : 0) | number:'1.2-2' }}
+      </td>
+      <td>{{ (sars[d.id] ? sars[d.id].sum : 0) | number:'1.2-2' }}</td>
+    </tr>
+    <tr align="right">
+      <td align="center">รวม</td>
+      <td *ngFor="let t of types">
+        {{ (sars['sum'] ? sars['sum'][t.id] : 0) | number:'1.2-2' }}
+      </td>
+      <td>{{ (sars['total'] || 0) | number:'1.2-2' }}</td>
+    </tr>
+  </table>
+</div>
+<p>&nbsp;</p>
+
+<h5 class="title_1">แหล่งทุนงานวิจัย {{ year }}</h5>
+<div class="detail_1">
+  <table class="table table-bordered">
+    <tr align="center">
+      <td rowspan="2" width="40%" class="middle">คณะ / หน่วยงาน</td>
+      <td [attr.colspan]="types.length + 1">แหล่งทุน</td>
+    </tr>
+    <tr align="center">
+      <td width="15%" *ngFor="let t of types">{{ t.name }}</td>
+      <td width="15%">รวม</td>
+    </tr>
+    <tr align="right" *ngFor="let d of deps">
+      <td align="left">{{ d.name }}</td>
+      <td *ngFor="let t of types">
+        {{ (funds[d.id] ? (funds[d.id][t.id] || 0) : 0) | number:'1.2-2' }}
+      </td>
+      <td>{{ (funds[d.id] ? funds[d.id].sum : 0) | number:'1.2-2' }}</td>
+    </tr>
+    <tr align="right">
+      <td align="center">รวม</td>
+      <td *ngFor="let t of types">
+        {{ (funds['sum'] ? (funds['sum'][t.id] || 0) : 0) | number:'1.2-2' }}
+      </td>
+      <td>{{ (funds['total'] || 0) | number:'1.2-2' }}</td>
+    </tr>
+  </table>
+</div>
+<p>&nbsp;</p>
+
+<h5 class="title_1">แหล่งทุนงานบริการวิชาการ</h5>
+<div class="detail_1">
+
+  <mat-form-field>
+    <mat-select placeholder="ปีงบประมาณ" [(value)]="year2" (selectionChange)="getAcademicFunds()">
+      <mat-option *ngFor="let d of years2" [value]="d">{{d}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <table class="table table-bordered">
+    <tr align="center">
+      <td width="50%">คณะ / หน่วยงาน</td>
+      <td>งบประมาณ</td>
+    </tr>
+    <tr *ngFor="let d of academicFunds">
+      <td>{{ d.dep.name }}</td>
+      <td align="right">{{ (d.budget || 0) | number:'1.2-2' }}</td>
+    </tr>
+    <tr align="right">
+      <td align="center">รวม</td>
+      <td>{{ (academicFundTotal || 0) | number:'1.2-2' }}</td>
+    </tr>
+  </table>
+
+</div>

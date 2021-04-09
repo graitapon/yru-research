@@ -1,0 +1,209 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.cdk-overlay-container {
+  z-index: 2000 !important;
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+button:focus { outline: 0; }
+
+/* http://stackoverflow.com/questions/643879/css-to-make-html-page-footer-stay-at-bottom-of-the-page-with-a-minimum-height */
+html {
+  position: relative;
+  min-height: 100%;
+  margin: 0; padding: 0;
+}
+body {
+  font-family: 'Sarabun', sans-serif;
+  /* Margin bottom by footer height */
+  margin-bottom: 80px;
+}
+
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Prompt', sans-serif;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  background-color: darkcyan;
+  color: white;
+  padding: 10px;
+}
+
+#header {
+  background-color: darkcyan;
+  color: white;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.14),
+  0px 0px 2px 2px rgba(0, 0, 0, 0.098), 0px 0px 5px 1px rgba(0, 0, 0, 0.084);
+  margin-bottom: 5px;
+}
+
+#content {
+  padding: 10px 20px 20px;
+  min-height: 100%;
+}
+.has-content-title {
+  margin-top: 50px;
+}
+.content-title-open {
+  margin-top: 50px !important;
+}
+
+.title1 {
+  font-size: x-large;
+  margin: 10px 15px;
+  color: white;
+  height: 30px;
+}
+.logo1 {
+  margin: 15px;
+}
+
+.navbar {
+  height: 52px;
+}
+
+.navbar-brand {
+  margin-left: 35px;
+}
+
+.navbar-nav {
+  margin-bottom: -2px;
+}
+
+.navbar-nav>li>a {
+  color: #cfc !important;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.navbar-selected, .root-selected {
+  border-bottom: 3px solid white;
+  margin-bottom: -3px;
+}
+.children-selected {
+  color: darkgreen;
+  font-size: larger;
+}
+.icon-selected i {
+  border-radius: 50%;
+  background-color: #cfc;
+  color: darkgreen;
+  padding: 5px;
+}
+
+
+.content-title {
+  background-color: #F8F9FA;
+  color: darkgreen;
+  padding: 10px 20px 0;
+  width: 100%;
+  /*height: 40px;*/
+  z-index: 900;
+  border-bottom: 1px solid #ddd;
+  position: fixed;
+  top: 52px;
+}
+
+@media (min-width: 992px) {
+  .content-title-clear {
+    position: relative;
+    top: -4px;
+  }
+  .has-content-title {
+    margin-top: 0;
+  }
+
+}
+
+
+/* https://profromgo.com/blog/google-calendar-responsive */
+.responsive-iframe-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+}
+
+.responsive-iframe-container iframe,
+.vresponsive-iframe-container object,
+.vresponsive-iframe-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+.title_1 {
+  color: darkgreen;
+  background-color: #eee;
+  padding: 10px;
+}
+
+.detail_1 {
+  padding: 0 16px 10px;
+  display: inline-block;
+  width: 100%;
+}
+
+.center {
+  text-align: center !important;
+}
+
+.middle {
+  vertical-align: middle !important;
+}
+
+.pre1 {
+  white-space: pre-line;
+}
+
+.fix-text {
+  width:160px;  /* adjust to desired wrapping */
+  white-space: pre-wrap; /* css-3 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+/* mydaterangepicker */
+.admin-mydrp .selector {
+  position: relative !important;
+}
+
+.example-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+.example-selected-value {
+  margin: 15px 0;
+}

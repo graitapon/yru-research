@@ -1,0 +1,48 @@
+<h3 class="alert alert-warning text-center" *ngIf="errors"><i class="fa fa-warning"></i> {{errMessage}}</h3>
+
+<ng-container *ngIf="ready">
+
+<div class="row">
+  <div class="col-3">
+    <mat-form-field>
+      <mat-select placeholder="ปีงบประมาณ" [(value)]="year" (selectionChange)="selectYear()">
+        <mat-option *ngFor="let d of years" [value]="d">{{d}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+  <div class="col-9">
+    <h5 *ngIf="year == 2561">
+      <a href="https://drive.google.com/file/d/0B83aI-eo57RnZ2RSOGpveEdUbUk/view?usp=sharing" target="_blank">
+        * คำชี้แจงและเอกสารประกอบการทำสัญญารับทุนอุดหนุนงานวิจัย 2561
+      </a>
+    </h5>
+
+  </div>
+</div>
+
+<h4 class="text-danger text-center">{{message}}</h4>
+
+<table class="table table-responsive-lg" *ngIf="items.length">
+  <tr>
+    <th width="15%">รหัสโครงการ</th>
+    <th>รายชื่อโครงการ (ที่อนุมัติแล้ว)</th>
+    <th width="10%" class="center">งบที่อนุมัติ</th>
+    <th width="15%" class="center">สถานะสัญญา</th>
+  </tr>
+  <tr *ngFor="let d of items">
+    <td>{{ d.code }}</td>
+    <td>
+      <a [routerLink]="['/contract', d.id, links]">{{ d.name }}</a>
+    </td>
+    <td align="right">
+      {{ d.budget | number:'1.2-2' }}
+    </td>
+    <td align="center">
+      <i class="fa fa-fw fa-{{ d.status.icon }}"></i> {{ d.status.name }}
+    </td>
+  </tr>
+</table>
+
+
+</ng-container>

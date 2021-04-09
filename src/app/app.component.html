@@ -1,0 +1,123 @@
+<div id="header" class="d-none d-sm-none d-md-none d-lg-block" *ngIf="!isAdmin">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-1">
+        <img class="logo1" src="https://eservice.yru.ac.th/images/yru_logo_s.png" alt="logo">
+      </div>
+      <div class="col-md-11">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="title1">{{title}}</div>
+          </div>
+          <div class="col-md-4 text-right">
+            <datetime></datetime>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <app-navbar></app-navbar>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" [ngClass]="{'d-block d-sm-block d-md-block d-lg-none': !isAdmin}" role="navigation">
+
+  <div class="menu-toggle-button" (click)="menuToggle($event)">
+    <i class="fa fa-2x fa-bars"></i>
+  </div>
+
+  <div class="navbar-brand">
+    {{navbar.title}}
+  </div>
+
+  <div class="navbar-collapse collapse">
+    <ul class="navbar-nav">
+      <li *ngFor="let menu of navbar.menus" class="nav-item">
+        <a [routerLink]="menu.path" routerLinkActive="active" *ngIf="menu.data"
+           [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+          <i class="fa fa-fw" [ngClass]="'fa-' + menu.data.icon" *ngIf="menu.data.icon"></i>
+          {{menu.data.name}}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="navbar-user-menu">
+    <a [routerLink]="'/'" class="nav-link"><i class="fa fa-home"></i></a>
+
+    <span *ngIf="!authService.isLoggedIn">
+      <a [routerLink]="'/login'" class="nav-link">Login</a>
+    </span>
+
+    <div class="btn-group" dropdown placement="bottom right" *ngIf="authService.isLoggedIn">
+      <button dropdownToggle type="button" class="btn btn-outline-primary">
+        <div style="display: -webkit-box">
+          <i class="fa fa-fw fa-user-o"></i>
+          <span class="d-none d-md-block">{{authService.user.name}}</span> &nbsp; <i class="fa fa-caret-down"></i>
+        </div>
+      </button>
+      <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+        <li role="menuitem"><a class="dropdown-item btn" (click)="authService.logout()">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+
+</nav>
+
+<div id="wrapper" [ngClass]="{ 'toggled': sidebarToggle }" [class.wrapper-open]="isAdmin" [class.wrapper-close]="!isAdmin">
+
+  <div id="sidebar-wrapper" [ngClass]="{'d-block d-sm-block d-md-block d-lg-none': !isAdmin}">
+
+    <app-sidenav></app-sidenav>
+
+  </div>
+
+  <div id="page-content-wrapper" [class.page-content-wrapper-open]="isAdmin" [class.page-content-wrapper-close]="!isAdmin">
+    <div class="content-title"
+         *ngIf="content.title" [class.content-title-fixed]="isAdmin" [class.content-title-clear]="!isAdmin">
+
+      <h4>{{content.title}}</h4>
+    </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col" id="content" [class.has-content-title]="content.title" [class.content-title-open]="isAdmin">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<div id="footer" class="d-none d-sm-none d-md-none d-lg-block" *ngIf="!isAdmin">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-9">
+        <h5>สถาบันวิจัยและพัฒนาชายแดนภาคใต้ มหาวิทยาลัยราชภัฏยะลา</h5>
+        133 ถ.เทศบาล 3 ต.สะเตง อ.เมือง จ.ยะลา 95000 โทร. 073-299635
+      </div>
+      <div class="col-md-3">
+        <div class="pull-right">
+          <h6>YRU ITX Project</h6>
+          graitapon.t@yru.ac.th
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-go-top-button 
+    [animate]="false"    
+    [styles]="{
+        'border-radius': '20px 20px 20px 20px',
+        'right': '5px',
+        'line-height': 0,
+        'z-index': 1200
+        }">
+  <i class="fa fa-chevron-up"></i>
+</ng-go-top-button>

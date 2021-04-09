@@ -1,0 +1,134 @@
+<h3 class="alert alert-warning text-center" *ngIf="errors"><i class="fa fa-warning"></i> {{errMessage}}</h3>
+
+<ng-container *ngIf="item">
+
+
+  <div class="row mb-2">
+    <div class="col-1">
+      <button mat-mini-fab color="" (click)="back()">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+    </div>
+    <div class="col-10" *ngIf="item">
+      <h5>{{item.project.name}}</h5>
+    </div>
+  </div>
+
+  <h5 class="title_1">ข้อมูลผู้วิจัย</h5>
+  <div class="detail_1" *ngIf="item">
+    <table class="table table-bordered">
+      <tr>
+        <td width="15%">ชื่อ-สกุล</td>
+        <td>{{item.name}}</td>
+      </tr>
+      <tr>
+        <td>ตำแหน่ง</td>
+        <td>{{item.pos}}</td>
+      </tr>
+      <tr>
+        <td>สังกัด</td>
+        <td>{{item.dep}}</td>
+      </tr>
+      <tr>
+        <td>ที่อยู่</td>
+        <td>{{item.address}}</td>
+      </tr>
+      <tr>
+        <td>เบอร์โทร</td>
+        <td>{{item.phone}}</td>
+      </tr>
+
+    </table>
+  </div>
+
+  <h5 class="title_1">รายละเอียดสัญญา</h5>
+  <div class="detail_1" *ngIf="item">
+    <table class="table table-bordered">
+      <tr>
+        <td width="15%">แหล่งทุน</td>
+        <td>{{item.project.fund_type ? item.project.fund_type.name : ''}}</td>
+      </tr>
+      <tr>
+        <td>งบประมาณ</td>
+        <td>{{(item.project.budget_edit ? item.project.budget_edit : item.project.budget) | number:'1.2-2'}}</td>
+      </tr>
+      <tr>
+        <td>วันที่ทำสัญญา</td>
+        <td>{{item.do_date | dateThai}}</td>
+      </tr>
+      <tr>
+        <td>ระยะเวลา</td>
+        <td>{{item.date_range}}</td>
+      </tr>
+      <tr>
+        <td>ผู้ค้ำประกัน</td>
+        <td>
+          <ol>
+            <li *ngFor="let d of guarantors">
+              {{d.fullname}}
+            </li>
+          </ol>
+
+        </td>
+      </tr>
+      <tr *ngIf="item.status.id == 5">
+        <td>ไฟล์สัญญา</td>
+        <td>
+          <ul>
+            <li *ngFor="let d of files">
+              <a href="{{d.url}}" target="_blank">{{d.name}}</a>
+              <span *ngIf="item.status.id == 5"><i class="fa fa-times text-danger pointer" (click)="deleteFile(d)"></i></span>
+            </li>
+          </ul>
+
+          <div *ngIf="item.status.id == 5">
+            <label class="btn badge-primary">
+              <i class="fa fa-cloud-upload"></i> Upload
+              <input type="file" style="display: none;" ng2FileSelect [uploader]="fileUpload.uploader"
+                     (change)="upload()" accept=".pdf,.doc,.docx">
+            </label>
+            <span *ngIf="fileUpload.uploader.queue.length != fileUpload.uploaded">
+           กำลังอัปโหลด.. ({{fileUpload.uploaded}} / {{fileUpload.uploader.queue.length}})
+         </span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <table class="table table-bordered" *ngIf="item.status.id == 3">
+      <tr>
+        <td width="50%">
+          <div class="form-group">
+            <label for="textarea1" class="text-danger">* แก้ไขตามข้อเสนอแนะ</label>
+            <textarea class="form-control" id="textarea1" rows="3" [(ngModel)]="text1"></textarea>
+            <p>&nbsp;</p>
+            <div align="center">
+              <h6 class="text-danger">{{message1}}</h6>
+              <button mat-raised-button color="warn" (click)="send(4)">ส่งกลับ</button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div align="center">
+            <button mat-raised-button color="accent" (click)="send(5)">อนุมัติ</button>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <table class="table table-bordered" *ngIf="tracks.length">
+      <tr>
+        <td width="20%">วันที่</td>
+        <td width="20%">สถานะ</td>
+        <td>หมายเหตุ</td>
+      </tr>
+      <tr *ngFor="let d of tracks">
+        <td>{{d.created_at | dateThai:'time'}}</td>
+        <td><i class="fa fa-fw fa-{{ d.status.icon }}"></i> {{ d.status.name }}</td>
+        <td><div class="pre1" [ngClass]="{'text-danger': d.status.id == 4}">{{d.note}}</div></td>
+      </tr>
+    </table>
+
+  </div>
+
+</ng-container>

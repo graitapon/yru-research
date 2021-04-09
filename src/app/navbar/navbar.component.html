@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-light" role="navigation">
+  <div class="navbar-collapse collapse">
+
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item"><a [routerLink]="'/'" class="nav-link" routerLinkActive="icon-selected"
+           [routerLinkActiveOptions]="{'exact': true}"><i class="fa fa-home"></i></a></li>
+
+      <li class="nav-item" [class.dropdown]="item.children" *ngFor="let item of menuService.menus">
+
+        <a class="nav-link" [routerLink]="'/' + (item.value.url ? item.value.url : item.value)"
+           *ngIf="!item.children" routerLinkActive="navbar-selected">
+          <span *ngIf="item.value.icon"><i class="fa fa-fw fa-{{item.value.icon}}"></i> &nbsp;</span> {{item.text}}
+        </a>
+
+        <ng-container dropdown *ngIf="item.children" routerLinkActive #rla="routerLinkActive">
+          <a href dropdownToggle (click)="false" class="nav-link dropdown-toggle"
+             [class.root-selected]="rla.isActive">{{item.text}}</a>
+          <ul *dropdownMenu class="dropdown-menu">
+            <li *ngFor="let d of item.children">
+              <a class="dropdown-item" [routerLink]="'/' + (d.value.url ? d.value.url : d.value)"
+                 routerLinkActive="children-selected">
+                <span *ngIf="d.value.icon"><i class="fa fa-fw fa-{{d.value.icon}}"></i> &nbsp;</span> {{d.text}}
+              </a>
+            </li>
+          </ul>
+        </ng-container>
+
+      </li>
+    </ul>
+
+    <ng-container *ngIf="!authService.isLoggedIn">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" [routerLink]="'/login'">Login</a></li>
+      </ul>
+    </ng-container>
+    <div class="btn-group" dropdown placement="bottom right" *ngIf="authService.isLoggedIn">
+      <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+        <i class="fa fa-fw fa-user-o"></i> {{authService.user.name}} <span class="caret"></span>
+      </button>
+      <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+        <li class="nav-item"><a class="dropdown-item" [routerLink]="'/admin'" *ngIf="authService.user.isAdmin">Admin</a></li>
+        <li class="nav-item"><a class="dropdown-item btn" (click)="authService.logout()">Logout</a></li>
+      </ul>
+    </div>
+
+  </div>
+</nav>
+

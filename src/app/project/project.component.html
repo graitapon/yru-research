@@ -1,0 +1,85 @@
+<h3 class="alert alert-warning text-center" *ngIf="errors"><i class="fa fa-warning"></i> {{errMessage}}</h3>
+
+<ng-container *ngIf="ready">
+
+<div *ngIf="!adding; else option1">
+
+  <div class="row mb-2">
+    <div class="col-md-2">
+      <mat-form-field>
+        <mat-select placeholder="ปีงบประมาณ" [(value)]="year" (selectionChange)="gets()">
+          <mat-option *ngFor="let d of years" [value]="d">{{d}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-md-1">
+      <button mat-mini-fab color="accent" (click)="add()" *ngIf="canAdd">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+
+  <h4 class="text-danger">{{message}}</h4>
+
+  <table class="table table-responsive-lg" *ngIf="items.length">
+    <tr>
+      <th width="10%">แหล่งทุน</th>
+      <th width="10%">รหัสโครงการ</th>
+      <th width="35%">รายชื่อโครงการ</th>
+      <th width="10%">สถานะ</th>
+      <th width="5%"></th>
+    </tr>
+    <tr *ngFor="let d of items">
+      <td>{{ d.fund_type.name }}</td>
+      <td>{{ d.code }}</td>
+      <td>
+        <a [routerLink]="['/project', d.id, links]">{{ d.name }}</a>
+        <span class="text-muted" *ngIf="staffId != d.staff_id"><small> (ผู้ร่วมโครงการ)</small></span>
+        <ul *ngIf="d.children">
+          <li *ngFor="let x of d.children">
+            <a [routerLink]="['/project', x.id, links]">{{ x.name }}</a>
+          </li>
+        </ul>
+      </td>
+      <td>
+        <i class="fa fa-fw fa-{{ d.status.icon }}"></i> {{ d.status.name }}
+      </td>
+      <td>
+        <!--status < 2 && staffid == d.staff_id-->
+        <span  class="pointer text-danger" *ngIf="d.canDelete" (click)="delete1(d.id)">
+            <i class="fa fa-fw fa-trash-o"></i>
+        </span>
+      </td>
+    </tr>
+
+  </table>
+
+
+</div>
+
+<ng-template #option1>
+
+  <div class="row">
+    <div class="col-md-1">
+      <button mat-mini-fab color="" (click)="back()">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+
+    </div>
+    <div class="col-md-5">
+      <mat-form-field style="width:100%;">
+        <mat-select placeholder="แหล่งทุน" [(value)]="fundId">
+          <mat-option *ngFor="let d of funds" [value]="d.id">{{d.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-5">
+      <button mat-raised-button color="accent" (click)="doAdd()" [disabled]="!fundId">Create Project</button>
+    </div>
+
+  </div>
+
+</ng-template>
+
+</ng-container>

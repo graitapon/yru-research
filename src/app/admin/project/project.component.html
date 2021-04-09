@@ -1,0 +1,90 @@
+<div class="row">
+  <div class="col-md-4">
+    <mat-form-field style="width: 300px;">
+      <mat-select placeholder="หน่วยงาน" [(value)]="depId" (selectionChange)="gets()">
+        <mat-option *ngFor="let d of deps" [value]="d.id">{{d.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-auto">
+    <div class="badge badge-pill" [ngClass]="items.length > 0 ? 'badge-success' : 'badge-danger'">{{ items.length }}</div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-auto">
+    <mat-form-field>
+      <mat-select placeholder="ปีงบประมาณ" [(value)]="year" (selectionChange)="gets()">
+        <mat-option *ngFor="let d of years" [value]="d">{{d}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-auto">
+    <mat-form-field>
+      <mat-select placeholder="แหล่งทุน" [(value)]="typeId" (selectionChange)="gets()">
+        <mat-option value="">ทั้งหมด</mat-option>
+        <mat-option *ngFor="let d of types" [value]="d.id">{{d.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="col" align="right">
+    <mat-form-field>
+      <mat-select placeholder="สถานะ" [(value)]="status" (selectionChange)="gets()">
+        <mat-option value="">ทั้งหมด</mat-option>
+        <mat-option value="approve">อนุมัติ</mat-option>
+        <mat-option value="discard">ไม่ผ่าน</mat-option>
+        <mat-option value="pending">ดำเนินการ</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+
+</div>
+
+<table class="table table-bordered">
+  <tr>
+    <th width="13%">เลขที่</th>
+    <th>ชื่อโครงการ</th>
+    <th width="13%">งบที่เสนอ</th>
+    <th width="13%">งบที่อนุมัติ</th>
+    <th width="15%">สถานะ</th>
+  </tr>
+  <tr *ngFor="let d of items">
+    <td>{{d.code}}</td>
+    <td>
+      <a [routerLink]="['/admin/project', d.id, links]">{{d.name}}</a>
+      <ul *ngIf="d.children">
+        <li *ngFor="let x of d.children">
+          <!--{{ x.name }}-->
+          <a [routerLink]="['/admin/project', x.id, links]">{{x.name}}</a>
+        </li>
+      </ul>
+
+    </td>
+    <td align="right">
+      {{(d.budget || 0) | number:'1.2-2'}}
+      <div *ngIf="d.children.length">
+        <p>+</p>
+        <div *ngFor="let x of d.children">
+          {{ x.budget | number:'1.2-2' }}<br>
+        </div>
+      </div>
+
+    </td>
+    <td align="right">
+      <div *ngIf="d.budget_edit">
+        {{(d.budget_edit || 0) | number:'1.2-2'}}
+
+        <div *ngIf="d.children.length">
+          <p>+</p>
+          <div *ngFor="let x of d.children">
+            {{ (x.budget_edit || x.budget)  | number:'1.2-2' }}<br>
+          </div>
+        </div>
+
+      </div>
+    </td>
+    <td><i class="fa fa-fw fa-{{ d.status.icon }}"></i> {{ d.status.name }}</td>
+  </tr>
+</table>

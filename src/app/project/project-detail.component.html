@@ -1,0 +1,304 @@
+<h3 class="alert alert-warning text-center" *ngIf="errors"><i class="fa fa-warning"></i> {{errMessage}}</h3>
+
+<ng-container *ngIf="item">
+
+<div class="row mb-2">
+  <div class="col-1">
+    <button mat-mini-fab color="" (click)="back()">
+      <i class="fa fa-chevron-left"></i>
+    </button>
+  </div>
+  <div class="col-11">
+
+    <table class="table table-bordered" *ngIf="fund">
+      <tr>
+        <td width="35%">
+          <h6>แหล่งทุน : {{fund.type?.name}} {{fund.year}}</h6>
+          <h6>หน่วยงาน : {{fund.dep?.name}}</h6>
+        </td>
+        <td>
+          <h6>แบบฟอร์มดาวน์โหลด</h6>
+          <ul>
+            <li *ngFor="let d of fund.files">
+              <a href="{{d.url}}" target="_blank">{{d.name}}</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+</div>
+
+
+<h5 class="title_1">รายละเอียดโครงการ</h5>
+<div class="detail_1" *ngIf="item">
+  <table class="table table-bordered">
+    <tr>
+      <td width="20%">รหัสโครงการ</td>
+      <td>
+        {{item.code}}
+      </td>
+    </tr>
+    <tr>
+      <td>ชื่อโครงการ</td>
+      <td>
+        <xedit type="text" [data]="item.name" (save)="save($event, 'name')" *ngIf="canEdit"></xedit>
+        <div *ngIf="!canEdit">{{item.name}}</div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>ชื่อโครงการ (Eng)</td>
+      <td>
+        <xedit type="text" [data]="item.name_eng" (save)="save($event, 'name_eng')" *ngIf="canEdit"></xedit>
+        <div *ngIf="!canEdit">{{item.name_eng}}</div>
+      </td>
+    </tr>
+
+     <tr *ngIf="item.year < 2564">
+       <td>ประเภทโครงการ</td>
+       <td>
+         <mat-radio-group [(ngModel)]="series" *ngIf="canEdit && item.parent_id == null">
+           <mat-radio-button [value]="d.id"  *ngFor="let d of cats" class="pr-3">{{d.name}}</mat-radio-button>
+         </mat-radio-group>
+
+         <div *ngIf="!canEdit || item.parent_id != null">
+           {{item.series == 0 ? (item.parent_id == null ? 'โครงการเดี่ยว' : 'โครงการย่อย (ภายใต้โครงการชุด)') : 'โครงการชุด'}}
+         </div>
+
+         <div *ngIf="item.series == 1">
+           <table class="table">
+             <tr>
+               <td width="5%">ลำดับ</td>
+               <td>โครงการย่อย</td>
+               <td width="15%">% อัตราส่วน</td>
+               <td width="15%">งบประมาณ</td>
+             </tr>
+             <tr *ngFor="let d of item.children; let i = index">
+               <td>{{i + 1}}</td>
+               <td>
+                 {{d.name}}
+               </td>
+               <td>
+                 {{d.ratio | number:'1.0-1'}}<span *ngFor="let x of d.teams">, {{(x.ratio || 0) | number:'1.0-1' }}</span>
+               </td>
+               <td>{{ d.budget | number:'1.2-2' }}</td>
+             </tr>
+           </table>
+         </div>
+
+       </td>
+     </tr>
+    <tr *ngIf="item.parent_id == null && item.year < 2564">
+      <td>ลักษณะการวิจัย</td>
+      <td>
+        <div *ngIf="canEdit">
+          <mat-checkbox [checked]="d.checked" *ngFor="let d of types" class="mr-2" (change)="typeSelect(d)">
+            {{d.name}}
+          </mat-checkbox>
+        </div>
+        <div *ngIf="!canEdit">{{type}}</div>
+      </td>
+    </tr>
+    <tr *ngIf="item.year >= 2564">
+      <td>ประเภทการวิจัย</td>
+      <td>
+        <mat-radio-group [(ngModel)]="type_select" (change)="typeChange($event)"
+        class="example-radio-group" *ngIf="canEdit">
+          <mat-radio-button [value]="d.id" *ngFor="let d of types">
+            {{d.name}} 
+            <xedit *ngIf="d.childs.length && type_select == d.id" 
+              type="select" 
+                       (save)="save($event, 'type_id')" [config]="typeSelectOptions"
+                       ></xedit>
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="!canEdit">{{item.type}}</div>
+      </td>
+    </tr>
+
+
+    <tr *ngIf="item.parent_id == null">
+      <td>สาขาการวิจัย</td>
+      <td>
+        <xedit type="select" 
+                       (save)="save($event, 'theme_id')" [config]="themeSelectOptions"
+                       *ngIf="canEdit"></xedit>
+
+        <div *ngIf="!canEdit">{{item.theme ? item.theme.name : ''}}</div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>ประเด็นการวิจัย (ตามยุทธศาสตร์ฯ)</td>
+      <td>
+        <mat-radio-group [(ngModel)]="strategy_select" (change)="strategyChange($event)"
+        class="example-radio-group" *ngIf="canEdit">
+          <mat-radio-button [value]="d.id" *ngFor="let d of strategies">
+            {{d.name}} 
+            <br>
+            <xedit *ngIf="d.childs.length && strategy_select == d.id" 
+              type="select" 
+                       (save)="save($event, 'strategy_id')" [config]="strategySelectOptions"
+                       ></xedit>
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="!canEdit">{{item.strategy}}</div>
+      </td>
+    </tr>
+
+    <!-- <tr *ngIf="item.parent_id == null">
+      <td>ความเชี่ยวชาญที่เกี่ยวข้อง</td>
+      <td>
+        <tag-input [(ngModel)]="skills" [maxItems]="10" [identifyBy]="'id'" [displayBy]="'name'"
+                   placeholder="+ Skill" secondaryPlaceholder="Enter a skill"
+                   [validators]="skillValidators"
+                   (onSelect)="selectSkill($event)"
+                   (onRemove)="removeSkill($event)"
+                   (onAdd)="addSkill($event)" *ngIf="canEdit">
+          <tag-input-dropdown [identifyBy]="'id'" [displayBy]="'name'" [limitItemsTo]="7"
+                              [autocompleteObservable]="skillObserve">
+          </tag-input-dropdown>
+        </tag-input>
+
+        <div *ngIf="!canEdit">{{skill}}</div>
+      </td>
+    </tr> -->
+
+    <tr>
+       <td>งบประมาณ</td>
+       <td>
+         <div class="row">
+           <div class="col-6">
+             <xedit type="number" [data]="item.budget"
+                            name="quantity" (save)="save($event, 'budget')" *ngIf="canEdit"></xedit>
+
+             <div *ngIf="!canEdit">{{item.budget | number:'1.2-2'}}</div>
+
+           </div>
+           <div class="col-6">
+             <div *ngIf="item.status.id == 5">อนุมัติ {{(item.budget_edit ? item.budget_edit : item.budget)  | number:'1.2-2'}}</div>
+           </div>
+         </div>
+       </td>
+     </tr>
+     <tr>
+       <td>หัวหน้าโครงการ</td>
+       <td>
+         <div class="row">
+           <div class="col-md-6">{{staff?.fullname}}</div>
+           <div class="col-md-6">
+             อัตราส่วน <span *ngIf="!canEdit">{{item.ratio | number:'1.0-2'}}%</span>
+             <xedit type="number" [data]="item.ratio" (save)="save($event, 'ratio')" *ngIf="canEdit"></xedit>
+           </div>
+         </div>
+
+       </td>
+     </tr>
+     <tr>
+       <td>ผู้ร่วมโครงการ</td>
+       <td>
+
+         <table class="table table-bordered">
+           <tr *ngFor="let d of teams; let i = index">
+             <td width="50%">
+               <div>
+                 {{i + 1}}. {{d.type_id == 1 ? d.staff.fullname : d.staff.name}}
+                 <span class="pull-right" *ngIf="canEdit"><i class="fa fa-times text-danger pointer" (click)="deleteTeam(d)"></i></span>
+               </div>
+             </td>
+             <td>
+               <xedit type="number" [data]="d.ratio" (save)="save({id: d.id, ratio: $event}, 'team_ratio')" [canEdit]="canEdit"></xedit>
+             </td>
+           </tr>
+         </table>
+
+         <div class="col-md-4" *ngIf="canEdit">
+
+           <input [(ngModel)]="asyncSelectedStaff"
+                  [typeahead]="dataSourceStaff"
+                  (typeaheadOnSelect)="typeaheadOnSelectStaff($event)"
+                  [typeaheadOptionsLimit]="7"
+                  [typeaheadWaitMs]="300"
+                  typeaheadOptionField="fullname"
+                  placeholder="ค้นหา.."
+                  class="form-control"
+                  name="searchStaff">
+
+           <p>&nbsp;</p>
+           <h6 class="text-danger">* สำหรับบุคลากรภายนอก (กำหนดเอง)</h6>
+           <input type="text" class="form-control" placeholder="คำนำหน้า ชื่อ สกุล" #custom1
+                  (keyup.enter)="addCustomStaff(custom1.value); custom1.value = ''">
+           <h6 class="text-danger">{{er1}}</h6>
+
+           <!-- <tag-input [(ngModel)]="persons" [maxItems]="1" [identifyBy]="'id'" [displayBy]="'name'"
+                      secondaryPlaceholder="คำนำหน้า ชื่อ สกุล"
+                      [validators]="personValidators" [errorMessages]="errorMessages"
+                      (onAdd)="addPerson($event)" *ngIf="canEdit">
+             <tag-input-dropdown [identifyBy]="'id'" [displayBy]="'name'" [limitItemsTo]="7"
+                                 [autocompleteObservable]="personObserve">
+             </tag-input-dropdown>
+           </tag-input> -->
+
+
+         </div>
+
+       </td>
+     </tr>
+     <tr *ngIf="item.parent_id == null">
+       <td>ไฟล์ Proposal (Word & Pdf)</td>
+       <td>
+         <ul>
+           <li *ngFor="let d of files">
+             <a href="{{d.url}}" target="_blank">{{d.name}}</a>
+             <span class="" *ngIf="canEdit"><i class="fa fa-times text-danger pointer" (click)="deleteFile(d)"></i></span>
+           </li>
+         </ul>
+
+         <div *ngIf="canEdit">
+           <label class="btn badge-primary">
+             <i class="fa fa-cloud-upload"></i> Upload
+             <input type="file" style="display: none;" ng2FileSelect [uploader]="fileUpload.uploader"
+                    (change)="upload()" accept=".pdf,.doc,.docx">
+           </label>
+           <span *ngIf="fileUpload.uploader.queue.length != fileUpload.uploaded">
+             กำลังอัปโหลด.. ({{fileUpload.uploaded}} / {{fileUpload.uploader.queue.length}})
+           </span>
+         </div>
+       </td>
+     </tr>
+    <!--<tr *ngIf="item.parent_id == null">-->
+      <!--<td>สถานะ</td>-->
+      <!--<td>-->
+        <!--<i class="fa fa-fw fa-{{ item.status.icon }}"></i> {{ item.status.name }}-->
+      <!--</td>-->
+    <!--</tr>-->
+  </table>
+
+  <h5 class="text-danger text-center">{{message2}}</h5>
+  <p align="center" *ngIf="canEdit">
+    <button mat-raised-button color="accent" (click)="send()">Send</button>
+  </p>
+  <p align="center" *ngIf="item.status.id == 2">
+    <button mat-raised-button color="warn" (click)="pullback()">ดึงกลับ</button>
+  </p>
+
+  <table class="table table-bordered" *ngIf="tracks.length">
+    <tr>
+      <td width="20%">วันที่</td>
+      <td width="20%">สถานะ</td>
+      <td>หมายเหตุ</td>
+    </tr>
+    <tr *ngFor="let d of tracks">
+      <td>{{d.created_at.date | dateThai:'time'}}</td>
+      <td><i class="fa fa-fw fa-{{ d.status.icon }}"></i> {{ d.status.name }}</td>
+      <td><div class="pre1 text-danger">{{d.note}}</div></td>
+    </tr>
+  </table>
+
+</div>
+
+</ng-container>
